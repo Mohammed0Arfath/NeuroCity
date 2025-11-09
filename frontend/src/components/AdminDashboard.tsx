@@ -17,6 +17,7 @@ interface Report {
   id: number;
   description: string;
   photo_url: string;
+  audio_url?: string;
   latitude: number;
   longitude: number;
   status: 'pending' | 'verified' | 'resolved';
@@ -302,67 +303,32 @@ const AdminDashboard: React.FC = () => {
       </div>
 
       {/* Statistics Cards */}
-      <div style={{ 
-        display: 'grid', 
-        gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', 
-        gap: '1rem', 
-        marginBottom: '2rem' 
-      }}>
-        <div style={{ 
-          backgroundColor: 'white', 
-          padding: '1.5rem', 
-          borderRadius: '8px', 
-          boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
-          textAlign: 'center'
-        }}>
-          <h3 style={{ margin: '0 0 0.5rem 0', color: '#ff6b6b' }}>Pending</h3>
-          <p style={{ fontSize: '2rem', fontWeight: 'bold', margin: 0 }}>{statusCounts.pending}</p>
+      <div className="stats-grid">
+        <div className="stat-card">
+          <h3 className="stat-title" style={{ color: '#ff0080' }}>Pending</h3>
+          <p className="stat-value">{statusCounts.pending}</p>
         </div>
         
-        <div style={{ 
-          backgroundColor: 'white', 
-          padding: '1.5rem', 
-          borderRadius: '8px', 
-          boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
-          textAlign: 'center'
-        }}>
-          <h3 style={{ margin: '0 0 0.5rem 0', color: '#4ecdc4' }}>Verified</h3>
-          <p style={{ fontSize: '2rem', fontWeight: 'bold', margin: 0 }}>{statusCounts.verified}</p>
+        <div className="stat-card">
+          <h3 className="stat-title" style={{ color: '#00f0ff' }}>Verified</h3>
+          <p className="stat-value">{statusCounts.verified}</p>
         </div>
         
-        <div style={{ 
-          backgroundColor: 'white', 
-          padding: '1.5rem', 
-          borderRadius: '8px', 
-          boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
-          textAlign: 'center'
-        }}>
-          <h3 style={{ margin: '0 0 0.5rem 0', color: '#45b7d1' }}>Resolved</h3>
-          <p style={{ fontSize: '2rem', fontWeight: 'bold', margin: 0 }}>{statusCounts.resolved}</p>
+        <div className="stat-card">
+          <h3 className="stat-title" style={{ color: '#4caf50' }}>Resolved</h3>
+          <p className="stat-value">{statusCounts.resolved}</p>
         </div>
         
-        <div style={{ 
-          backgroundColor: 'white', 
-          padding: '1.5rem', 
-          borderRadius: '8px', 
-          boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
-          textAlign: 'center'
-        }}>
-          <h3 style={{ margin: '0 0 0.5rem 0', color: '#2c3e50' }}>Total</h3>
-          <p style={{ fontSize: '2rem', fontWeight: 'bold', margin: 0 }}>{reports.length}</p>
+        <div className="stat-card">
+          <h3 className="stat-title" style={{ color: '#b066ff' }}>Total</h3>
+          <p className="stat-value">{reports.length}</p>
         </div>
       </div>
 
       {/* Priority Information */}
-      <div style={{
-        backgroundColor: 'white',
-        padding: '1rem',
-        borderRadius: '8px',
-        marginBottom: '1rem',
-        boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
-      }}>
-        <h3 style={{ margin: '0 0 0.5rem 0', color: '#1976d2' }}>🏆 Reports Sorted by Priority</h3>
-        <p style={{ margin: 0, fontSize: '0.875rem', color: '#666' }}>
+      <div className="analytics-section" style={{ marginBottom: '1rem' }}>
+        <h3 style={{ margin: '0 0 0.5rem 0', color: '#00f0ff' }}>🏆 Reports Sorted by Priority</h3>
+        <p style={{ margin: 0, fontSize: '0.875rem', color: 'rgba(255, 255, 255, 0.7)' }}>
           Reports are automatically sorted by: 
           <strong>1) Urgent Issues</strong> → 
           <strong>2) High Severity</strong> → 
@@ -443,6 +409,16 @@ const AdminDashboard: React.FC = () => {
                     {report.description.length > 80 
                       ? `${report.description.substring(0, 80)}...` 
                       : report.description || 'No description provided'}
+                    
+                    {report.audio_url && (
+                      <div style={{ marginTop: '0.5rem' }}>
+                        <audio 
+                          controls 
+                          src={`${API_BASE_URL}${report.audio_url}`}
+                          style={{ width: '100%', height: '30px' }}
+                        />
+                      </div>
+                    )}
                   </div>
                 </td>
                 
@@ -665,45 +641,20 @@ const AdminDashboard: React.FC = () => {
 
       {/* Map Modal */}
       {showMap && selectedReport && (
-        <div style={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          backgroundColor: 'rgba(0, 0, 0, 0.5)',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          zIndex: 1000
-        }}>
-          <div style={{
-            backgroundColor: 'white',
-            borderRadius: '8px',
-            padding: '1rem',
-            maxWidth: '90vw',
-            maxHeight: '90vh',
+        <div className="modal-overlay">
+          <div className="modal-content" style={{
             width: '800px',
             height: '600px',
             display: 'flex',
             flexDirection: 'column'
           }}>
-            <div style={{ 
-              display: 'flex', 
-              justifyContent: 'space-between', 
-              alignItems: 'center', 
-              marginBottom: '1rem' 
-            }}>
-              <h3>Report #{selectedReport.id} Location</h3>
+            <div className="ai-modal-header">
+              <h3 style={{ margin: 0 }}>
+                Report #{selectedReport.id} <span className="gradient-text">Location</span>
+              </h3>
               <button
                 onClick={() => setShowMap(false)}
-                style={{
-                  background: 'none',
-                  border: 'none',
-                  fontSize: '1.5rem',
-                  cursor: 'pointer',
-                  padding: '0.25rem'
-                }}
+                className="ai-close-btn"
               >
                 ✕
               </button>
@@ -736,47 +687,13 @@ const AdminDashboard: React.FC = () => {
       
       {/* AI Analysis Modal */}
       {showAiAnalysis && selectedAiReport && selectedAiReport.ai_analysis && (
-        <div style={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          backgroundColor: 'rgba(0, 0, 0, 0.5)',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          zIndex: 1000,
-          overflow: 'auto'
-        }}>
-          <div style={{
-            backgroundColor: 'white',
-            borderRadius: '8px',
-            padding: '2rem',
-            maxWidth: '90vw',
-            maxHeight: '90vh',
-            width: '700px',
-            overflow: 'auto'
-          }}>
-            <div style={{ 
-              display: 'flex', 
-              justifyContent: 'space-between', 
-              alignItems: 'center', 
-              marginBottom: '2rem',
-              borderBottom: '2px solid #f0f0f0',
-              paddingBottom: '1rem'
-            }}>
-              <h2 style={{ margin: 0, color: '#1976d2' }}>🤖 AI Analysis - Report #{selectedAiReport.id}</h2>
+        <div className="modal-overlay" style={{ overflow: 'auto' }}>
+          <div className="modal-content" style={{ width: '700px' }}>
+            <div className="ai-modal-header">
+              <h2>🤖 AI Analysis - Report #{selectedAiReport.id}</h2>
               <button
                 onClick={() => setShowAiAnalysis(false)}
-                style={{
-                  background: 'none',
-                  border: 'none',
-                  fontSize: '1.5rem',
-                  cursor: 'pointer',
-                  padding: '0.25rem',
-                  color: '#666'
-                }}
+                className="ai-close-btn"
               >
                 ✕
               </button>
@@ -784,110 +701,58 @@ const AdminDashboard: React.FC = () => {
             
             <div style={{ display: 'grid', gap: '1.5rem' }}>
               {/* Main Analysis Results */}
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem' }}>
-                <div style={{ 
-                  backgroundColor: '#f8f9fa', 
-                  padding: '1rem', 
-                  borderRadius: '8px',
-                  border: '1px solid #e9ecef'
-                }}>
-                  <h4 style={{ margin: '0 0 0.5rem 0', color: '#495057' }}>Category</h4>
-                  <span style={{
-                    backgroundColor: '#4caf50',
-                    color: 'white',
-                    padding: '0.5rem 1rem',
-                    borderRadius: '4px',
-                    fontSize: '0.875rem',
-                    fontWeight: 'bold'
-                  }}>
+              <div className="ai-stats-grid">
+                <div className="ai-stat-box">
+                  <h4>Category</h4>
+                  <span className="ai-badge category">
                     {selectedAiReport.ai_analysis.category?.replace('_', ' ')}
                   </span>
                 </div>
                 
-                <div style={{ 
-                  backgroundColor: '#f8f9fa', 
-                  padding: '1rem', 
-                  borderRadius: '8px',
-                  border: '1px solid #e9ecef'
-                }}>
-                  <h4 style={{ margin: '0 0 0.5rem 0', color: '#495057' }}>Severity</h4>
-                  <span style={{
-                    backgroundColor: selectedAiReport.ai_analysis.severity === 'HIGH' ? '#f44336' : 
-                                     selectedAiReport.ai_analysis.severity === 'MEDIUM' ? '#ff9800' : '#4caf50',
-                    color: 'white',
-                    padding: '0.5rem 1rem',
-                    borderRadius: '4px',
-                    fontSize: '0.875rem',
-                    fontWeight: 'bold'
-                  }}>
+                <div className="ai-stat-box">
+                  <h4>Severity</h4>
+                  <span className={`ai-badge severity-${selectedAiReport.ai_analysis.severity?.toLowerCase()}`}>
                     {selectedAiReport.ai_analysis.severity}
                   </span>
                 </div>
                 
-                <div style={{ 
-                  backgroundColor: '#f8f9fa', 
-                  padding: '1rem', 
-                  borderRadius: '8px',
-                  border: '1px solid #e9ecef'
-                }}>
-                  <h4 style={{ margin: '0 0 0.5rem 0', color: '#495057' }}>Confidence</h4>
-                  <div style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#1976d2' }}>
+                <div className="ai-stat-box">
+                  <h4>Confidence</h4>
+                  <div className="ai-confidence">
                     {selectedAiReport.ai_analysis.confidence}%
                   </div>
                 </div>
                 
-                <div style={{ 
-                  backgroundColor: '#f8f9fa', 
-                  padding: '1rem', 
-                  borderRadius: '8px',
-                  border: '1px solid #e9ecef'
-                }}>
-                  <h4 style={{ margin: '0 0 0.5rem 0', color: '#495057' }}>Department</h4>
-                  <div style={{ fontWeight: 'bold', color: '#495057' }}>
+                <div className="ai-stat-box">
+                  <h4>Department</h4>
+                  <div className="ai-department">
                     {selectedAiReport.ai_analysis.departmentResponsible}
                   </div>
                 </div>
               </div>
               
               {selectedAiReport.ai_analysis.urgent && (
-                <div style={{ 
-                  backgroundColor: '#ffebee', 
-                  color: '#c62828', 
-                  padding: '1rem', 
-                  borderRadius: '8px',
-                  border: '2px solid #f44336',
-                  textAlign: 'center'
-                }}>
-                  <h3 style={{ margin: '0 0 0.5rem 0' }}>⚠️ URGENT ISSUE</h3>
-                  <p style={{ margin: 0 }}>This issue has been flagged as urgent and requires immediate attention!</p>
+                <div className="ai-urgent-banner">
+                  <h3>⚠️ URGENT ISSUE</h3>
+                  <p>This issue has been flagged as urgent and requires immediate attention!</p>
                 </div>
               )}
               
               {/* Technical Assessment */}
-              <div style={{ 
-                backgroundColor: '#f8f9fa', 
-                padding: '1.5rem', 
-                borderRadius: '8px',
-                border: '1px solid #e9ecef'
-              }}>
-                <h4 style={{ margin: '0 0 1rem 0', color: '#495057' }}>Technical Assessment</h4>
-                <p style={{ margin: 0, lineHeight: 1.6, color: '#495057' }}>
+              <div className="ai-section technical">
+                <h4>Technical Assessment</h4>
+                <p>
                   {selectedAiReport.ai_analysis.technicalAssessment}
                 </p>
               </div>
               
               {/* Safety Concerns */}
               {selectedAiReport.ai_analysis.safetyConcerns && selectedAiReport.ai_analysis.safetyConcerns.length > 0 && (
-                <div style={{ 
-                  backgroundColor: '#fff3e0', 
-                  padding: '1.5rem', 
-                  borderRadius: '8px',
-                  border: '1px solid #ff9800'
-                }}>
-                  <h4 style={{ margin: '0 0 1rem 0', color: '#e65100' }}>⚠️ Safety Concerns</h4>
-                  <ul style={{ margin: 0, paddingLeft: '1.5rem' }}>
+                <div className="ai-section safety">
+                  <h4>⚠️ Safety Concerns</h4>
+                  <ul>
                     {selectedAiReport.ai_analysis.safetyConcerns.map((concern, index) => (
-                      <li key={index} style={{ marginBottom: '0.5rem', color: '#e65100' }}>
+                      <li key={index}>
                         {concern}
                       </li>
                     ))}
@@ -897,16 +762,11 @@ const AdminDashboard: React.FC = () => {
               
               {/* Recommended Actions */}
               {selectedAiReport.ai_analysis.recommendedActions && selectedAiReport.ai_analysis.recommendedActions.length > 0 && (
-                <div style={{ 
-                  backgroundColor: '#e8f5e8', 
-                  padding: '1.5rem', 
-                  borderRadius: '8px',
-                  border: '1px solid #4caf50'
-                }}>
-                  <h4 style={{ margin: '0 0 1rem 0', color: '#2e7d32' }}>✅ Recommended Actions</h4>
-                  <ul style={{ margin: 0, paddingLeft: '1.5rem' }}>
+                <div className="ai-section actions">
+                  <h4>✅ Recommended Actions</h4>
+                  <ul>
                     {selectedAiReport.ai_analysis.recommendedActions.map((action, index) => (
-                      <li key={index} style={{ marginBottom: '0.5rem', color: '#2e7d32' }}>
+                      <li key={index}>
                         {action}
                       </li>
                     ))}
@@ -915,63 +775,38 @@ const AdminDashboard: React.FC = () => {
               )}
               
               {/* Estimates */}
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem' }}>
-                <div style={{ 
-                  backgroundColor: '#f8f9fa', 
-                  padding: '1rem', 
-                  borderRadius: '8px',
-                  border: '1px solid #e9ecef',
-                  textAlign: 'center'
-                }}>
-                  <h4 style={{ margin: '0 0 0.5rem 0', color: '#495057' }}>Estimated Time</h4>
-                  <div style={{ fontWeight: 'bold', color: '#1976d2' }}>
+              <div className="ai-estimates-grid">
+                <div className="ai-estimate-box">
+                  <h4>Estimated Time</h4>
+                  <div className="ai-estimate-value">
                     {selectedAiReport.ai_analysis.estimatedTime || 'Unknown'}
                   </div>
                 </div>
                 
-                <div style={{ 
-                  backgroundColor: '#f8f9fa', 
-                  padding: '1rem', 
-                  borderRadius: '8px',
-                  border: '1px solid #e9ecef',
-                  textAlign: 'center'
-                }}>
-                  <h4 style={{ margin: '0 0 0.5rem 0', color: '#495057' }}>Estimated Cost</h4>
-                  <div style={{ fontWeight: 'bold', color: '#1976d2' }}>
+                <div className="ai-estimate-box">
+                  <h4>Estimated Cost</h4>
+                  <div className="ai-estimate-value">
                     {selectedAiReport.ai_analysis.estimatedCost || 'Unknown'}
                   </div>
                 </div>
                 
-                <div style={{ 
-                  backgroundColor: '#f8f9fa', 
-                  padding: '1rem', 
-                  borderRadius: '8px',
-                  border: '1px solid #e9ecef',
-                  textAlign: 'center'
-                }}>
-                  <h4 style={{ margin: '0 0 0.5rem 0', color: '#495057' }}>Priority Level</h4>
-                  <div style={{ fontWeight: 'bold', color: '#1976d2' }}>
+                <div className="ai-estimate-box">
+                  <h4>Priority Level</h4>
+                  <div className="ai-estimate-value">
                     {selectedAiReport.ai_analysis.estimatedUrgency || 'MODERATE'}
                   </div>
                 </div>
               </div>
               
               {/* AI Processing Info */}
-              <div style={{ 
-                backgroundColor: '#f0f0f0', 
-                padding: '1rem', 
-                borderRadius: '8px',
-                fontSize: '0.875rem',
-                color: '#666',
-                textAlign: 'center'
-              }}>
+              <div className="ai-footer">
                 {selectedAiReport.ai_analysis.aiProcessed ? (
                   <>🤖 Analyzed using Google Gemini Vision AI</>
                 ) : (
                   <>⚙️ Analyzed using fallback keyword detection</>
                 )}
                 {selectedAiReport.ai_analysis.fallbackUsed && (
-                  <div style={{ marginTop: '0.25rem', fontSize: '0.75rem' }}>
+                  <div className="ai-footer-note">
                     Note: AI analysis was not available, used keyword-based classification
                   </div>
                 )}
@@ -983,68 +818,41 @@ const AdminDashboard: React.FC = () => {
       
       {/* Resolution Photo Upload Modal */}
       {showResolutionUpload && resolutionReport && (
-        <div style={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          backgroundColor: 'rgba(0, 0, 0, 0.5)',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          zIndex: 1000
-        }}>
-          <div style={{
-            backgroundColor: 'white',
-            borderRadius: '8px',
-            padding: '2rem',
-            maxWidth: '90vw',
-            maxHeight: '90vh',
-            width: '600px',
-            overflow: 'auto'
-          }}>
-            <div style={{ 
-              display: 'flex', 
-              justifyContent: 'space-between', 
-              alignItems: 'center', 
-              marginBottom: '1.5rem',
-              borderBottom: '2px solid #f0f0f0',
-              paddingBottom: '1rem'
-            }}>
-              <h2 style={{ margin: 0, color: '#1976d2' }}>📷 Upload Resolution Photo</h2>
-              <button
-                onClick={() => setShowResolutionUpload(false)}
-                style={{
-                  background: 'none',
-                  border: 'none',
-                  fontSize: '1.5rem',
-                  cursor: 'pointer',
-                  padding: '0.25rem',
-                  color: '#666'
-                }}
-              >
+        <div className="modal-overlay">
+          <div className="modal-content">
+            <div className="ai-modal-header">
+              <h2 style={{ margin: 0 }}>
+                📷 Upload <span className="gradient-text">Resolution Photo</span>
+              </h2>
+              <button className="ai-close-btn" onClick={() => setShowResolutionUpload(false)}>
                 ✕
               </button>
             </div>
             
             {error && (
-              <div style={{
-                backgroundColor: '#ffebee',
-                color: '#c62828',
-                padding: '1rem',
-                borderRadius: '4px',
-                marginBottom: '1rem'
-              }}>
+              <div className="ai-urgent-banner" style={{ marginBottom: '1rem' }}>
                 {error}
               </div>
             )}
             
             <div style={{ marginBottom: '1.5rem' }}>
-              <h3 style={{ color: '#666', marginBottom: '1rem' }}>Report #{resolutionReport.id}</h3>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1rem' }}>
+              <h3 style={{ color: 'rgba(255, 255, 255, 0.7)', marginBottom: '1rem' }}>
+                Report #{resolutionReport.id}
+              </h3>
+              <div style={{ 
+                display: 'grid', 
+                gridTemplateColumns: '1fr 1fr', 
+                gap: '1rem', 
+                marginBottom: '1rem' 
+              }}>
                 <div>
-                  <h4 style={{ margin: '0 0 0.5rem 0' }}>Original Issue (Before):</h4>
+                  <h4 style={{ 
+                    margin: '0 0 0.5rem 0',
+                    color: '#00f0ff',
+                    fontSize: '0.875rem'
+                  }}>
+                    Original Issue (Before):
+                  </h4>
                   <img 
                     src={`${API_BASE_URL}${resolutionReport.photo_url}`} 
                     alt="Original issue" 
@@ -1052,13 +860,19 @@ const AdminDashboard: React.FC = () => {
                       width: '100%',
                       height: '150px',
                       objectFit: 'cover',
-                      borderRadius: '4px',
-                      border: '2px solid #f44336'
+                      borderRadius: '8px',
+                      border: '2px solid #ff0080'
                     }}
                   />
                 </div>
                 <div>
-                  <h4 style={{ margin: '0 0 0.5rem 0' }}>Resolution Photo (After):</h4>
+                  <h4 style={{ 
+                    margin: '0 0 0.5rem 0',
+                    color: '#00f0ff',
+                    fontSize: '0.875rem'
+                  }}>
+                    Resolution Photo (After):
+                  </h4>
                   {resolutionPreview ? (
                     <img 
                       src={resolutionPreview} 
@@ -1067,7 +881,7 @@ const AdminDashboard: React.FC = () => {
                         width: '100%',
                         height: '150px',
                         objectFit: 'cover',
-                        borderRadius: '4px',
+                        borderRadius: '8px',
                         border: '2px solid #4caf50'
                       }}
                     />
@@ -1075,13 +889,13 @@ const AdminDashboard: React.FC = () => {
                     <div style={{
                       width: '100%',
                       height: '150px',
-                      backgroundColor: '#f5f5f5',
-                      border: '2px dashed #ccc',
-                      borderRadius: '4px',
+                      backgroundColor: 'rgba(255, 255, 255, 0.05)',
+                      border: '2px dashed rgba(0, 240, 255, 0.3)',
+                      borderRadius: '8px',
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
-                      color: '#666'
+                      color: 'rgba(255, 255, 255, 0.5)'
                     }}>
                       Upload resolution photo
                     </div>
@@ -1091,26 +905,24 @@ const AdminDashboard: React.FC = () => {
             </div>
             
             <div style={{ marginBottom: '1.5rem' }}>
-              <label style={{ 
-                display: 'block', 
-                marginBottom: '0.5rem',
-                fontWeight: 'bold',
-                color: '#333'
-              }}>
+              <label className="form-label" style={{ marginBottom: '0.5rem' }}>
                 Upload Resolution Photo *
               </label>
               <input
                 type="file"
                 accept="image/*"
                 onChange={handleResolutionPhotoChange}
-                style={{
-                  width: '100%',
-                  padding: '0.5rem',
-                  border: '1px solid #ccc',
-                  borderRadius: '4px'
+                className="form-input"
+                style={{ 
+                  padding: '0.75rem',
+                  cursor: 'pointer'
                 }}
               />
-              <div style={{ fontSize: '0.875rem', color: '#666', marginTop: '0.25rem' }}>
+              <div style={{ 
+                fontSize: '0.875rem', 
+                color: 'rgba(255, 255, 255, 0.6)', 
+                marginTop: '0.5rem' 
+              }}>
                 This photo will be analyzed by AI to verify the issue has been resolved.
               </div>
             </div>
@@ -1122,13 +934,11 @@ const AdminDashboard: React.FC = () => {
             }}>
               <button
                 onClick={() => setShowResolutionUpload(false)}
+                className="btn"
                 style={{
-                  padding: '0.75rem 1.5rem',
-                  backgroundColor: '#666',
-                  color: 'white',
-                  border: 'none',
-                  borderRadius: '4px',
-                  cursor: 'pointer'
+                  flex: 1,
+                  background: 'rgba(255, 255, 255, 0.1)',
+                  border: '1px solid rgba(255, 255, 255, 0.2)'
                 }}
               >
                 Cancel
@@ -1136,12 +946,13 @@ const AdminDashboard: React.FC = () => {
               <button
                 onClick={submitResolution}
                 disabled={!resolutionPhoto || uploadingResolution}
+                className="btn"
                 style={{
-                  padding: '0.75rem 1.5rem',
-                  backgroundColor: resolutionPhoto && !uploadingResolution ? '#4caf50' : '#ccc',
-                  color: 'white',
-                  border: 'none',
-                  borderRadius: '4px',
+                  flex: 1,
+                  background: resolutionPhoto && !uploadingResolution 
+                    ? 'linear-gradient(135deg, #00f0ff, #b066ff)' 
+                    : 'rgba(255, 255, 255, 0.1)',
+                  opacity: resolutionPhoto && !uploadingResolution ? 1 : 0.5,
                   cursor: resolutionPhoto && !uploadingResolution ? 'pointer' : 'not-allowed'
                 }}
               >

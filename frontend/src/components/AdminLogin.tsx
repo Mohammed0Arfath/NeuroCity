@@ -48,80 +48,45 @@ const AdminLogin: React.FC<AdminLoginProps> = ({ onLoginSuccess }) => {
       display: 'flex',
       justifyContent: 'center',
       alignItems: 'center',
-      minHeight: '100vh',
-      backgroundColor: '#f5f5f5'
+      minHeight: '80vh',
+      padding: '2rem'
     }}>
-      <div style={{
-        backgroundColor: 'white',
-        padding: '2rem',
-        borderRadius: '8px',
-        boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
-        width: '100%',
-        maxWidth: '400px'
-      }}>
+      <div className="form-container" style={{ maxWidth: '400px' }}>
         <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
-          <h1 style={{ color: '#1976d2', margin: '0 0 0.5rem 0' }}>Admin Login</h1>
-          <p style={{ color: '#666', margin: 0 }}>Enter your credentials to access the dashboard</p>
+          <h1 className="form-title">Admin Login</h1>
+          <p style={{ color: 'var(--text-secondary)', margin: 0 }}>Enter your credentials to access the dashboard</p>
         </div>
 
         {error && (
-          <div style={{
-            backgroundColor: '#ffebee',
-            color: '#c62828',
-            padding: '1rem',
-            borderRadius: '4px',
-            marginBottom: '1rem'
-          }}>
+          <div className="error-message">
             {error}
           </div>
         )}
 
         <form onSubmit={handleLogin}>
-          <div style={{ marginBottom: '1.5rem' }}>
-            <label style={{
-              display: 'block',
-              marginBottom: '0.5rem',
-              fontWeight: 'bold',
-              color: '#333'
-            }}>
+          <div className="form-group">
+            <label className="form-label">
               Username
             </label>
             <input
               type="text"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
-              style={{
-                width: '100%',
-                padding: '0.75rem',
-                border: '1px solid #ccc',
-                borderRadius: '4px',
-                fontSize: '1rem'
-              }}
+              className="form-input"
               placeholder="Enter username"
               required
             />
           </div>
 
-          <div style={{ marginBottom: '1.5rem' }}>
-            <label style={{
-              display: 'block',
-              marginBottom: '0.5rem',
-              fontWeight: 'bold',
-              color: '#333'
-            }}>
+          <div className="form-group">
+            <label className="form-label">
               Password
             </label>
             <input
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              style={{
-                width: '100%',
-                padding: '0.75rem',
-                border: '1px solid #ccc',
-                borderRadius: '4px',
-                fontSize: '1rem'
-              }}
+              className="form-input"
               placeholder="Enter password"
               required
             />
@@ -131,17 +96,7 @@ const AdminLogin: React.FC<AdminLoginProps> = ({ onLoginSuccess }) => {
             <button
               type="submit"
               disabled={loading}
-              style={{
-                width: '100%',
-                padding: '0.75rem',
-                backgroundColor: loading ? '#ccc' : '#1976d2',
-                color: 'white',
-                border: 'none',
-                borderRadius: '4px',
-                fontSize: '1rem',
-                fontWeight: 'bold',
-                cursor: loading ? 'not-allowed' : 'pointer'
-              }}
+              className="btn"
             >
               {loading ? 'Logging in...' : 'Login'}
             </button>
@@ -150,12 +105,12 @@ const AdminLogin: React.FC<AdminLoginProps> = ({ onLoginSuccess }) => {
           <div style={{
             textAlign: 'center',
             fontSize: '0.875rem',
-            color: '#666',
+            color: 'var(--text-secondary)',
             marginTop: '1rem'
           }}>
             <p style={{ margin: '0.25rem 0' }}>Demo credentials:</p>
-            <p style={{ margin: '0.25rem 0' }}>Username: <strong>admin</strong></p>
-            <p style={{ margin: '0.25rem 0' }}>Password: <strong>admin</strong></p>
+            <p style={{ margin: '0.25rem 0' }}>Username: <strong style={{ color: 'var(--cyber-blue)' }}>admin</strong></p>
+            <p style={{ margin: '0.25rem 0' }}>Password: <strong style={{ color: 'var(--cyber-blue)' }}>admin</strong></p>
           </div>
         </form>
       </div>

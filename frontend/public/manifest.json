@@ -1,7 +1,7 @@
 {
-  "short_name": "Civic Reporter",
-  "name": "Civic Issue Reporter",
-  "description": "Report civic issues in your community",
+  "short_name": "NeuroCity",
+  "name": "NeuroCity - AI-Powered Smart City Platform",
+  "description": "Neural network-powered civic intelligence platform for next-generation cities",
   "icons": [
     {
       "src": "favicon.ico",
@@ -21,9 +21,9 @@
   ],
   "start_url": ".",
   "display": "standalone",
-  "theme_color": "#2c3e50",
-  "background_color": "#f5f5f5",
+  "theme_color": "#0f0f23",
+  "background_color": "#0a0a15",
   "orientation": "portrait",
   "scope": ".",
-  "categories": ["utilities", "government"]
+  "categories": ["utilities", "government", "productivity"]
 }

@@ -68,7 +68,8 @@ function initializeDatabase() {
       { name: 'escalation_notified', type: 'BOOLEAN DEFAULT FALSE' },
       { name: 'original_priority', type: 'TEXT DEFAULT "MEDIUM"' },
       { name: 'blockchain_tx_hash', type: 'TEXT' },  // Blockchain transaction hash
-      { name: 'last_blockchain_update', type: 'DATETIME' }  // Last blockchain update timestamp
+      { name: 'last_blockchain_update', type: 'DATETIME' },  // Last blockchain update timestamp
+      { name: 'audio_url', type: 'TEXT' }  // Audio note URL
     ];
     
     // Add missing columns

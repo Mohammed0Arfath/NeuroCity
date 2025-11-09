@@ -109,7 +109,8 @@ const PredictiveAnalytics: React.FC = () => {
 
   if (loading) {
     return (
-      <div style={{ textAlign: 'center', padding: '2rem' }}>
+      <div className="loading-state">
+        <div className="loading-spinner"></div>
         <p>Loading predictive analytics...</p>
       </div>
     );
@@ -117,7 +118,7 @@ const PredictiveAnalytics: React.FC = () => {
 
   if (error) {
     return (
-      <div style={{ textAlign: 'center', padding: '2rem' }}>
+      <div className="loading-state">
         <div className="error-message">{error}</div>
         <button onClick={fetchAnalytics} className="btn btn-small" style={{ marginTop: '1rem' }}>
           Retry
@@ -128,7 +129,7 @@ const PredictiveAnalytics: React.FC = () => {
 
   if (!analytics) {
     return (
-      <div style={{ textAlign: 'center', padding: '2rem' }}>
+      <div className="empty-state">
         <p>No analytics data available.</p>
       </div>
     );
@@ -169,96 +170,45 @@ const PredictiveAnalytics: React.FC = () => {
   const weeklyChartData = prepareWeeklyData();
 
   return (
-    <div>
+    <div className="analytics-container">
       {/* Header */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
+      <div className="analytics-header">
         <h1>Predictive Analytics Dashboard</h1>
-        <div style={{ display: 'flex', gap: '1rem' }}>
-          <button onClick={fetchAnalytics} className="btn btn-small">
-            Refresh Data
-          </button>
-        </div>
+        <button onClick={fetchAnalytics} className="btn btn-small">
+          REFRESH DATA
+        </button>
       </div>
 
       {/* Summary Cards */}
-      <div style={{ 
-        display: 'grid', 
-        gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', 
-        gap: '1rem', 
-        marginBottom: '2rem' 
-      }}>
-        <div style={{ 
-          backgroundColor: 'white', 
-          padding: '1.5rem', 
-          borderRadius: '8px', 
-          boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
-          textAlign: 'center'
-        }}>
-          <h3 style={{ margin: '0 0 0.5rem 0', color: '#ff6b6b' }}>Emerging Hotspots</h3>
-          <p style={{ fontSize: '2rem', fontWeight: 'bold', margin: 0 }}>
-            {analytics.emergingHotspots.length}
-          </p>
+      <div className="stats-grid">
+        <div className="stat-card hotspots">
+          <h3>Emerging Hotspots</h3>
+          <p>{analytics.emergingHotspots.length}</p>
         </div>
         
-        <div style={{ 
-          backgroundColor: 'white', 
-          padding: '1.5rem', 
-          borderRadius: '8px', 
-          boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
-          textAlign: 'center'
-        }}>
-          <h3 style={{ margin: '0 0 0.5rem 0', color: '#4ecdc4' }}>Categories Tracked</h3>
-          <p style={{ fontSize: '2rem', fontWeight: 'bold', margin: 0 }}>
-            {categories.length}
-          </p>
+        <div className="stat-card categories">
+          <h3>Categories Tracked</h3>
+          <p>{categories.length}</p>
         </div>
         
-        <div style={{ 
-          backgroundColor: 'white', 
-          padding: '1.5rem', 
-          borderRadius: '8px', 
-          boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
-          textAlign: 'center'
-        }}>
-          <h3 style={{ margin: '0 0 0.5rem 0', color: '#45b7d1' }}>Predictive Models</h3>
-          <p style={{ fontSize: '2rem', fontWeight: 'bold', margin: 0 }}>
-            {Object.keys(analytics.predictions).length}
-          </p>
+        <div className="stat-card models">
+          <h3>Predictive Models</h3>
+          <p>{Object.keys(analytics.predictions).length}</p>
         </div>
         
-        <div style={{ 
-          backgroundColor: 'white', 
-          padding: '1.5rem', 
-          borderRadius: '8px', 
-          boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
-          textAlign: 'center'
-        }}>
-          <h3 style={{ margin: '0 0 0.5rem 0', color: '#2c3e50' }}>Last Updated</h3>
-          <p style={{ fontSize: '1rem', fontWeight: 'bold', margin: 0 }}>
-            {new Date(analytics.generatedAt).toLocaleTimeString()}
-          </p>
+        <div className="stat-card updated">
+          <h3>Last Updated</h3>
+          <p>{new Date(analytics.generatedAt).toLocaleTimeString()}</p>
         </div>
       </div>
 
       {/* Controls */}
-      <div style={{ 
-        backgroundColor: 'white', 
-        padding: '1rem', 
-        borderRadius: '8px', 
-        marginBottom: '2rem', 
-        boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
-        display: 'flex',
-        gap: '1rem',
-        flexWrap: 'wrap'
-      }}>
+      <div className="analytics-controls">
         <div>
-          <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 'bold' }}>
-            Category:
-          </label>
+          <label>Category:</label>
           <select 
             value={selectedCategory}
             onChange={(e) => setSelectedCategory(e.target.value)}
-            style={{ padding: '0.5rem', borderRadius: '4px', border: '1px solid #ccc' }}
           >
             <option value="all">All Categories</option>
             {categories.map(category => (
@@ -271,81 +221,34 @@ const PredictiveAnalytics: React.FC = () => {
       </div>
 
       {/* Emerging Hotspots */}
-      <div style={{ 
-        backgroundColor: 'white', 
-        padding: '1.5rem', 
-        borderRadius: '8px', 
-        marginBottom: '2rem', 
-        boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
-      }}>
-        <h2 style={{ color: '#1976d2', marginBottom: '1rem' }}>📍 Emerging Hotspots</h2>
+      <div className="analytics-section">
+        <h2>📍 Emerging Hotspots</h2>
         {analytics.emergingHotspots.length > 0 ? (
-          <div style={{ 
-            display: 'grid', 
-            gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', 
-            gap: '1rem' 
-          }}>
+          <div className="hotspots-grid">
             {analytics.emergingHotspots.map((hotspot, index) => (
-              <div 
-                key={index} 
-                style={{ 
-                  border: '1px solid #eee', 
-                  borderRadius: '8px', 
-                  padding: '1rem',
-                  backgroundColor: '#f8f9fa'
-                }}
-              >
-                <div style={{ 
-                  display: 'flex', 
-                  justifyContent: 'space-between', 
-                  alignItems: 'center',
-                  marginBottom: '1rem'
-                }}>
-                  <h3 style={{ margin: 0, color: '#d32f2f' }}>
-                    Hotspot #{index + 1}
-                  </h3>
-                  <span style={{ 
-                    backgroundColor: '#d32f2f', 
-                    color: 'white', 
-                    padding: '0.25rem 0.5rem', 
-                    borderRadius: '12px',
-                    fontSize: '0.8rem',
-                    fontWeight: 'bold'
-                  }}>
+              <div key={index} className="hotspot-card">
+                <div className="hotspot-header">
+                  <h3>Hotspot #{index + 1}</h3>
+                  <span className="hotspot-badge">
                     {hotspot.count} reports
                   </span>
                 </div>
                 
-                <div style={{ marginBottom: '1rem' }}>
-                  <p style={{ margin: '0.25rem 0', fontSize: '0.9rem' }}>
-                    <strong>Location:</strong> {hotspot.center.lat.toFixed(4)}, {hotspot.center.lng.toFixed(4)}
-                  </p>
-                  <p style={{ margin: '0.25rem 0', fontSize: '0.9rem' }}>
-                    <strong>Primary Issue:</strong> {hotspot.topCategory.replace('_', ' ')}
-                  </p>
-                  <p style={{ margin: '0.25rem 0', fontSize: '0.9rem' }}>
-                    <strong>Severity:</strong> {hotspot.topSeverity}
-                  </p>
-                  <p style={{ margin: '0.25rem 0', fontSize: '0.9rem' }}>
-                    <strong>Growth Rate:</strong> {hotspot.growthRate.toFixed(1)}%
-                  </p>
+                <div className="hotspot-details">
+                  <p><strong>Location:</strong> {hotspot.center.lat.toFixed(4)}, {hotspot.center.lng.toFixed(4)}</p>
+                  <p><strong>Primary Issue:</strong> {hotspot.topCategory.replace('_', ' ')}</p>
+                  <p><strong>Severity:</strong> {hotspot.topSeverity}</p>
+                  <p><strong>Growth Rate:</strong> {hotspot.growthRate.toFixed(1)}%</p>
                 </div>
                 
-                <div style={{ 
-                  display: 'flex', 
-                  flexWrap: 'wrap', 
-                  gap: '0.5rem',
-                  marginBottom: '1rem'
-                }}>
+                <div className="category-tags">
                   {Object.entries(hotspot.categories).map(([category, count]) => (
                     <span 
                       key={category}
+                      className="category-tag"
                       style={{ 
                         backgroundColor: getCategoryColor(category),
-                        color: 'white',
-                        padding: '0.25rem 0.5rem',
-                        borderRadius: '4px',
-                        fontSize: '0.8rem'
+                        color: 'white'
                       }}
                     >
                       {category.replace('_', ' ')}: {count}
@@ -356,21 +259,15 @@ const PredictiveAnalytics: React.FC = () => {
             ))}
           </div>
         ) : (
-          <p style={{ textAlign: 'center', color: '#666', fontStyle: 'italic' }}>
+          <p className="empty-state">
             No emerging hotspots detected in the last 2 weeks.
           </p>
         )}
       </div>
 
       {/* Weekly Trends */}
-      <div style={{ 
-        backgroundColor: 'white', 
-        padding: '1.5rem', 
-        borderRadius: '8px', 
-        marginBottom: '2rem', 
-        boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
-      }}>
-        <h2 style={{ color: '#1976d2', marginBottom: '1rem' }}>📈 Weekly Trends</h2>
+      <div className="analytics-section">
+        <h2>📈 Weekly Trends</h2>
         {weeklyChartData.length > 0 ? (
           <div style={{ overflowX: 'auto' }}>
             <table className="table">
@@ -399,21 +296,13 @@ const PredictiveAnalytics: React.FC = () => {
             </table>
           </div>
         ) : (
-          <p style={{ textAlign: 'center', color: '#666', fontStyle: 'italic' }}>
-            No trend data available.
-          </p>
+          <p className="empty-state">No trend data available.</p>
         )}
       </div>
 
       {/* Seasonal Trends */}
-      <div style={{ 
-        backgroundColor: 'white', 
-        padding: '1.5rem', 
-        borderRadius: '8px', 
-        marginBottom: '2rem', 
-        boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
-      }}>
-        <h2 style={{ color: '#1976d2', marginBottom: '1rem' }}>🌦️ Seasonal Trends</h2>
+      <div className="analytics-section">
+        <h2>🌦️ Seasonal Trends</h2>
         {Object.keys(analytics.seasonalTrends).length > 0 ? (
           <div style={{ overflowX: 'auto' }}>
             <table className="table">
@@ -442,106 +331,45 @@ const PredictiveAnalytics: React.FC = () => {
             </table>
           </div>
         ) : (
-          <p style={{ textAlign: 'center', color: '#666', fontStyle: 'italic' }}>
-            No seasonal data available.
-          </p>
+          <p className="empty-state">No seasonal data available.</p>
         )}
       </div>
 
       {/* Predictions */}
-      <div style={{ 
-        backgroundColor: 'white', 
-        padding: '1.5rem', 
-        borderRadius: '8px', 
-        marginBottom: '2rem', 
-        boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
-      }}>
-        <h2 style={{ color: '#1976d2', marginBottom: '1rem' }}>🔮 Predictions</h2>
+      <div className="analytics-section">
+        <h2>🔮 Predictions</h2>
         {Object.keys(analytics.predictions).length > 0 ? (
-          <div style={{ 
-            display: 'grid', 
-            gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', 
-            gap: '1rem' 
-          }}>
+          <div className="prediction-grid">
             {Object.entries(analytics.predictions).map(([category, prediction]) => (
-              <div 
-                key={category} 
-                style={{ 
-                  border: '1px solid #eee', 
-                  borderRadius: '8px', 
-                  padding: '1rem',
-                  backgroundColor: '#f8f9fa'
-                }}
-              >
-                <div style={{ 
-                  display: 'flex', 
-                  justifyContent: 'space-between', 
-                  alignItems: 'center',
-                  marginBottom: '1rem'
-                }}>
-                  <h3 style={{ margin: 0, color: getCategoryColor(category) }}>
+              <div key={category} className="prediction-card">
+                <div className="prediction-header">
+                  <h3 style={{ color: getCategoryColor(category) }}>
                     {category.replace('_', ' ')}
                   </h3>
-                  <span style={{ 
-                    backgroundColor: prediction.trend === 'increasing' ? '#f44336' : 
-                                   prediction.trend === 'decreasing' ? '#4caf50' : '#ff9800',
-                    color: 'white', 
-                    padding: '0.25rem 0.5rem', 
-                    borderRadius: '12px',
-                    fontSize: '0.8rem',
-                    fontWeight: 'bold'
-                  }}>
+                  <span className={`trend-badge ${prediction.trend}`}>
                     {prediction.trend.charAt(0).toUpperCase() + prediction.trend.slice(1)}
                   </span>
                 </div>
                 
                 <div style={{ marginBottom: '1rem' }}>
-                  <h4 style={{ margin: '0 0 0.5rem 0' }}>Historical Data:</h4>
-                  <div style={{ 
-                    display: 'flex', 
-                    gap: '0.5rem',
-                    flexWrap: 'wrap'
-                  }}>
+                  <h4 className="section-subtitle">Historical Data:</h4>
+                  <div className="data-points">
                     {prediction.historical.slice(0, 5).map((item, idx) => (
-                      <div 
-                        key={idx}
-                        style={{ 
-                          backgroundColor: '#e3f2fd', 
-                          padding: '0.25rem 0.5rem', 
-                          borderRadius: '4px',
-                          fontSize: '0.8rem'
-                        }}
-                      >
+                      <div key={idx} className="data-point historical">
                         <div>Week {item.period}</div>
-                        <div style={{ fontWeight: 'bold', textAlign: 'center' }}>
-                          {item.count}
-                        </div>
+                        <div>{item.count}</div>
                       </div>
                     ))}
                   </div>
                 </div>
                 
                 <div>
-                  <h4 style={{ margin: '0 0 0.5rem 0' }}>Predicted:</h4>
-                  <div style={{ 
-                    display: 'flex', 
-                    gap: '0.5rem',
-                    flexWrap: 'wrap'
-                  }}>
+                  <h4 className="section-subtitle">Predicted:</h4>
+                  <div className="data-points">
                     {prediction.predicted.slice(0, 4).map((item, idx) => (
-                      <div 
-                        key={idx}
-                        style={{ 
-                          backgroundColor: '#fff3e0', 
-                          padding: '0.25rem 0.5rem', 
-                          borderRadius: '4px',
-                          fontSize: '0.8rem'
-                        }}
-                      >
+                      <div key={idx} className="data-point predicted">
                         <div>Week +{idx + 1}</div>
-                        <div style={{ fontWeight: 'bold', textAlign: 'center' }}>
-                          {item.predictedCount}
-                        </div>
+                        <div>{item.predictedCount}</div>
                       </div>
                     ))}
                   </div>
@@ -550,9 +378,7 @@ const PredictiveAnalytics: React.FC = () => {
             ))}
           </div>
         ) : (
-          <p style={{ textAlign: 'center', color: '#666', fontStyle: 'italic' }}>
-            No predictions available.
-          </p>
+          <p className="empty-state">No predictions available.</p>
         )}
       </div>
     </div>

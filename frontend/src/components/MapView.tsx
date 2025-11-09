@@ -130,26 +130,21 @@ const MapView: React.FC = () => {
       </div>
       
       {/* Legend */}
-      <div style={{ 
-        marginBottom: '1rem', 
-        padding: '1rem', 
-        backgroundColor: 'white', 
-        borderRadius: '8px', 
-        boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+      <div className="analytics-section" style={{ 
         display: 'flex',
         gap: '2rem',
         alignItems: 'center',
         flexWrap: 'wrap'
       }}>
-        <strong>Legend:</strong>
+        <strong style={{ color: '#00f0ff' }}>Legend:</strong>
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
           <div style={{ 
             width: '20px', 
             height: '20px', 
             borderRadius: '50%', 
             backgroundColor: getStatusColor('pending'),
-            border: '2px solid white',
-            boxShadow: '0 2px 4px rgba(0,0,0,0.3)'
+            border: '2px solid rgba(255, 255, 255, 0.3)',
+            boxShadow: '0 0 10px rgba(255, 0, 128, 0.5)'
           }}></div>
           <span>Pending</span>
         </div>
@@ -159,8 +154,8 @@ const MapView: React.FC = () => {
             height: '20px', 
             borderRadius: '50%', 
             backgroundColor: getStatusColor('verified'),
-            border: '2px solid white',
-            boxShadow: '0 2px 4px rgba(0,0,0,0.3)'
+            border: '2px solid rgba(255, 255, 255, 0.3)',
+            boxShadow: '0 0 10px rgba(0, 240, 255, 0.5)'
           }}></div>
           <span>Verified</span>
         </div>
@@ -170,8 +165,8 @@ const MapView: React.FC = () => {
             height: '20px', 
             borderRadius: '50%', 
             backgroundColor: getStatusColor('resolved'),
-            border: '2px solid white',
-            boxShadow: '0 2px 4px rgba(0,0,0,0.3)'
+            border: '2px solid rgba(255, 255, 255, 0.3)',
+            boxShadow: '0 0 10px rgba(76, 175, 80, 0.5)'
           }}></div>
           <span>Resolved (No Proof)</span>
         </div>
@@ -317,13 +312,9 @@ const MapView: React.FC = () => {
       </div>
       
       {reports.length === 0 && (
-        <div style={{ 
-          textAlign: 'center', 
-          padding: '2rem',
-          backgroundColor: 'white',
-          borderRadius: '8px',
-          marginTop: '1rem',
-          boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
+        <div className="analytics-section" style={{ 
+          textAlign: 'center',
+          marginTop: '1rem'
         }}>
           <p>No reports found. Be the first to report a civic issue!</p>
         </div>

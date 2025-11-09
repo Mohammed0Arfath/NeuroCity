@@ -44,11 +44,12 @@ function App() {
         <nav className="navbar">
           <div className="nav-container">
             <Link to="/" className="nav-logo">
-              Civic Reporter
+              <span className="logo-neuro">Neuro</span>
+              <span className="logo-city">City</span>
             </Link>
             <ul className="nav-links">
               <li><Link to="/" className="nav-link">Report Issue</Link></li>
-              <li><Link to="/map" className="nav-link">View Reports</Link></li>
+              <li><Link to="/map" className="nav-link">Live Map</Link></li>
               {isAdminLoggedIn ? (
                 <>
                   <li><Link to="/admin" className="nav-link">Dashboard</Link></li>

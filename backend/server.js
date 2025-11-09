@@ -41,13 +41,16 @@ const storage = multer.diskStorage({
 const upload = multer({
   storage: storage,
   limits: {
-    fileSize: 5 * 1024 * 1024 // 5MB limit
+    fileSize: 10 * 1024 * 1024 // 10MB limit (increased for audio)
   },
   fileFilter: (req, file, cb) => {
-    if (file.mimetype.startsWith('image/')) {
+    // Accept image files for photo, resolutionPhoto fields
+    if ((file.fieldname === 'photo' || file.fieldname === 'resolutionPhoto') && file.mimetype.startsWith('image/')) {
+      cb(null, true);
+    } else if (file.fieldname === 'audioNote' && file.mimetype.startsWith('audio/')) {
       cb(null, true);
     } else {
-      cb(new Error('Only image files are allowed'));
+      cb(new Error('Invalid file type'));
     }
   }
 });
@@ -79,11 +82,14 @@ escalationService.start(30); // Check every 30 minutes
 // API Routes
 
 // POST /report - Create a new report with AI analysis
-app.post('/report', upload.single('photo'), async (req, res) => {
+app.post('/report', upload.fields([
+  { name: 'photo', maxCount: 1 },
+  { name: 'audioNote', maxCount: 1 }
+]), async (req, res) => {
   try {
     const { description, latitude, longitude } = req.body;
     
-    if (!req.file) {
+    if (!req.files || !req.files.photo) {
       return res.status(400).json({ error: 'Photo is required' });
     }
     
@@ -91,8 +97,14 @@ app.post('/report', upload.single('photo'), async (req, res) => {
       return res.status(400).json({ error: 'Latitude and longitude are required' });
     }
 
-    const photoUrl = `/uploads/${req.file.filename}`;
-    const imagePath = req.file.path;
+    const photoUrl = `/uploads/${req.files.photo[0].filename}`;
+    const imagePath = req.files.photo[0].path;
+    
+    // Handle optional audio note
+    let audioUrl = null;
+    if (req.files.audioNote && req.files.audioNote[0]) {
+      audioUrl = `/uploads/${req.files.audioNote[0].filename}`;
+    }
     
     // Perform AI analysis
     console.log('Starting AI analysis for image:', imagePath);
@@ -170,17 +182,18 @@ app.post('/report', upload.single('photo'), async (req, res) => {
       // Handle duplicate report
       const duplicateQuery = `
         INSERT INTO reports (
-          description, photo_url, latitude, longitude, status,
+          description, photo_url, audio_url, latitude, longitude, status,
           category, severity, priority, department,
           ai_analysis, ai_confidence, estimated_cost, estimated_time, urgent,
           duplicate_of, similarity_score, is_primary,
           sla_deadline, original_priority, blockchain_tx_hash, last_blockchain_update
-        ) VALUES (?, ?, ?, ?, 'pending', ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 0, ?, ?, ?, ?)
+        ) VALUES (?, ?, ?, ?, ?, 'pending', ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 0, ?, ?, ?, ?)
       `;
       
       const duplicateParams = [
         description || '',
         photoUrl,
+        audioUrl,
         parseFloat(latitude),
         parseFloat(longitude),
         aiAnalysis.category,
@@ -272,17 +285,18 @@ app.post('/report', upload.single('photo'), async (req, res) => {
       // Handle new unique report
       const query = `
         INSERT INTO reports (
-          description, photo_url, latitude, longitude, status,
+          description, photo_url, audio_url, latitude, longitude, status,
           category, severity, priority, department,
           ai_analysis, ai_confidence, estimated_cost, estimated_time, urgent,
           duplicate_count, is_primary,
           sla_deadline, original_priority, blockchain_tx_hash, last_blockchain_update
-        ) VALUES (?, ?, ?, ?, 'pending', ?, ?, ?, ?, ?, ?, ?, ?, ?, 1, 1, ?, ?, ?, ?)
+        ) VALUES (?, ?, ?, ?, ?, 'pending', ?, ?, ?, ?, ?, ?, ?, ?, ?, 1, 1, ?, ?, ?, ?)
       `;
       
       const params = [
         description || '',
         photoUrl,
+        audioUrl,
         parseFloat(latitude),
         parseFloat(longitude),
         aiAnalysis.category,
